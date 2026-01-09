@@ -20,7 +20,8 @@ public class Main
 			System.out.println("1. Add Student");
 			System.out.println("2. View Students");
 			System.out.println("3. Delete Student");
-			System.out.println("4. Exit");
+			System.out.println("4. Student Search");
+			System.out.println("5. Exit");
 			System.out.print("Enter choice: ");
 			menuChoice=scan.nextInt();
 			switch (menuChoice) 
@@ -76,7 +77,7 @@ public class Main
 									{
 										System.out.println("Student ID already exists. Please enter a different ID.");
 										break; // go back to add-student loop
-								}
+									}
 									break;
 								case 2:
 									System.out.print("Re-enter the Name:- ");
@@ -149,13 +150,46 @@ public class Main
 					}
 					break;
 					case 4:
+					System.out.println("Search Student by ID");
+					System.out.println("Ask user to enter student ID for searching");
+					id = scan.nextInt();
+					Student foundStudent = null;
+					//boolean found=false;
+					for (Student searchStudent : students )
+					{
+						if (searchStudent.id==id)
+						{
+							foundStudent=searchStudent;
+							//found=true;
+							break;
+						}
+					} 
+					if (foundStudent != null)
+					{
+						System.out.println("Display details of the student");
+						System.out.println("The ID of the student is -"+foundStudent.id);
+						System.out.println("The Name of the Student is -"+foundStudent.name);
+						System.out.println(Arrays.toString(foundStudent.marks));
+						int totalMarks=foundStudent.totalMarks();
+						double avgMarks=foundStudent.averageMarks();
+						String result=foundStudent.isPass() ? "Pass" : "Fail";
+						System.out.println(totalMarks);
+						System.out.println(avgMarks);
+						System.out.println(result);
+					}
+					else
+					{
+						System.out.println("Enter Correct ID, Student Not Found");
+					}
+					break;
+					case 5:
 					System.out.println("Exiting program...");
 					break;
 					default:
 					System.out.println("Invalid choice. Try again.");
 					//break;
 			}
-		}while (menuChoice != 4);
+		}while (menuChoice != 5);
 	}
 }
 class Student
