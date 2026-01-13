@@ -21,7 +21,8 @@ public class Main
 			System.out.println("2. View Students");
 			System.out.println("3. Delete Student");
 			System.out.println("4. Student Search");
-			System.out.println("5. Exit");
+			System.out.println("5. Edit Student Details");
+			System.out.println("6. Exit");
 			System.out.print("Enter choice: ");
 			menuChoice=scan.nextInt();
 			switch (menuChoice) 
@@ -183,13 +184,88 @@ public class Main
 					}
 					break;
 					case 5:
+					System.out.println("Ask user to Enter the student ID");
+					id = scan.nextInt();
+					Student editStudentDetails = null;
+					for (Student editStudent : students) 
+					{
+						if (editStudent.id == id) 
+						{
+							editStudentDetails = editStudent;
+							break;
+						}
+					}
+
+					if (editStudentDetails == null) 
+					{
+						System.out.println("Student not found. Returning to menu.");
+						break;
+					}
+
+					// ---- Save ORIGINAL data (snapshot) ----
+					int originalId = editStudentDetails.id;
+					String originalName = editStudentDetails.name;
+					int[] originalMarks = Arrays.copyOf(
+							editStudentDetails.marks,
+							editStudentDetails.marks.length
+					);
+					System.out.println("Displaying the Details for the ID Entered");
+					System.out.println("ID: " + editStudentDetails.id);
+					System.out.println("Name: " + editStudentDetails.name);
+					System.out.println("Marks: " + Arrays.toString(editStudentDetails.marks));
+					System.out.println("Ask user what he want to edit");
+					System.out.println("1. ID");
+					System.out.println("2. Name");
+					System.out.println("3. Marks");
+					int editChoice = scan.nextInt();
+					// ---- TEMP variables (delayed mutation) ----
+					int newId = originalId;
+					String newName = originalName;
+					int[] newMarks = Arrays.copyOf(originalMarks, originalMarks.length);
+					if (editChoice == 1) {
+						System.out.print("Re-enter the ID of the Student: ");
+						newId = scan.nextInt();
+					}
+					else if (editChoice == 2) {
+						System.out.print("Re-enter the Name of the Student: ");
+						newName = scan.next();
+					}
+					else if (editChoice == 3) {
+						System.out.println("Re-enter the Marks of the Student");
+						for (int k = 0; k < newMarks.length; k++) {
+							System.out.print("Marks for subject " + (k + 1) + ": ");
+							newMarks[k] = scan.nextInt();
+						}
+					}
+					else {
+						System.out.println("Invalid option. Returning to menu.");
+						break;
+					}
+					// ---- CONFIRMATION ----
+					System.out.println("Ask user if he wants to save the changes (Yes/No)");
+					String editStudentconfirm = scan.next();
+					if (editStudentconfirm.equals("Yes")) {
+						// APPLY changes (commit)
+						editStudentDetails.id = newId;
+						editStudentDetails.name = newName;
+						editStudentDetails.marks = newMarks;
+						System.out.println("Changes saved successfully.");
+					} else {
+						// ROLLBACK (restore originals)
+						editStudentDetails.id = originalId;
+						editStudentDetails.name = originalName;
+						editStudentDetails.marks = originalMarks;
+						System.out.println("Changes discarded. Original data restored.");
+					}
+					break;
+					case 6:
 					System.out.println("Exiting program...");
 					break;
 					default:
 					System.out.println("Invalid choice. Try again.");
 					//break;
 			}
-		}while (menuChoice != 5);
+		}while (menuChoice != 6);
 	}
 }
 class Student
