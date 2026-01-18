@@ -4,6 +4,10 @@
 //Q) What if the user made a mistake and want to change it learn how to do it
 //In the End try figuring out an AI model into it and also think of how it should be useful for this??
 import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.File;
 
 public class Main
 {
@@ -12,6 +16,7 @@ public class Main
         Scanner scan = new Scanner(System.in);
         ArrayList<Student> students = new ArrayList<>();
 		StudentManager manager = new StudentManager();
+		manager.loadFromFile(students);
 		int menuChoice;
 		do
 		{
@@ -26,7 +31,7 @@ public class Main
 			System.out.println("6. Exit");
 			System.out.print("Enter choice: ");
 			menuChoice=scan.nextInt();
-			switch (menuChoice) 
+		switch (menuChoice)
 			{
 				case 1:
 					manager.addStudent(scan, students);
@@ -294,6 +299,40 @@ class StudentManager
 				{
 					System.out.println("Student not found.");
 				}
+	}
+	void loadFromFile(ArrayList<Student> students)
+	{
+		File file = new File("students.Data.txt");
+		if (!file.exists())
+		{
+			return;
+		}
+		try
+		{
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String line;
+			while ((line = reader.readLine()) != null)
+			{
+				System.out.println(line);
+				String[] parts = line.split("\\|");
+				int id = Integer.parseInt(parts[0]);
+				String name = parts[1];
+				String[] marksSheet = parts[2].split(",");
+				int[] marks = new int[marksSheet.length];
+				for (int i=0;i<marksSheet.length ;i++ )
+				{
+					marks[i]= Integer.parseInt(marksSheet[i]);
+					System.out.println(marks[i]);
+				}
+				Student s = new Student(id, name, marks);
+				students.add(s);
+			}
+			reader.close();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
 class Student
