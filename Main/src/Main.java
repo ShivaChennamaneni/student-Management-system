@@ -135,6 +135,19 @@ class StudentManager
 	            confirm = scan.next();
 			}
 		}
+		Student studentToRemove = null;
+		for (Student existingStudent : students)
+		{
+			if (existingStudent.id == id)
+			{
+				studentToRemove = existingStudent;
+				break;
+			}
+		}
+		if (studentToRemove != null)
+		{
+			students.remove(studentToRemove);
+		}
 		students.add(new Student(id, name, marks));
 		System.out.println("Student saved successfully.");
 	}
@@ -321,6 +334,11 @@ class StudentManager
 			{
 				System.out.println(line);
 				String[] parts = line.split("\\|");
+				//String[] parts = line.split("\\|");
+				if (parts.length < 3)
+				{
+					continue;
+				}
 				int id = Integer.parseInt(parts[0]);
 				String name = parts[1];
 				String[] marksSheet = parts[2].split(",");
