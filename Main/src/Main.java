@@ -6,6 +6,8 @@
 import java.util.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.File;
 
@@ -17,6 +19,7 @@ public class Main
         ArrayList<Student> students = new ArrayList<>();
 		StudentManager manager = new StudentManager();
 		manager.loadFromFile(students);
+		manager.saveToFile(students);
 		int menuChoice;
 		do
 		{
@@ -49,6 +52,9 @@ public class Main
 					manager.editStudent(scan, students);
 					break;
 				case 6:
+				System.out.println("Before exiting Changes are being Saved");
+				manager.saveToFile(students);
+				//System.out.println("Saving the changes made :-");
 				System.out.println("Exiting program...");
 				break;
 				default:
@@ -322,12 +328,50 @@ class StudentManager
 				for (int i=0;i<marksSheet.length ;i++ )
 				{
 					marks[i]= Integer.parseInt(marksSheet[i]);
-					System.out.println(marks[i]);
+					//System.out.println(marks[i]);
 				}
 				Student s = new Student(id, name, marks);
 				students.add(s);
 			}
 			reader.close();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	void saveToFile(ArrayList<Student> students)
+	{
+		File file = new File("students.Data.txt");
+		try
+		{
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			//writer.write();
+			for (Student student : students )
+			{
+				StringBuilder lineBuilder = new StringBuilder();
+				// add id
+				lineBuilder.append(student.getId());
+				lineBuilder.append("|");
+				// add name
+				lineBuilder.append(student.getName());
+				lineBuilder.append("|");
+				// add marks
+				int[] marks = student.getMarks();
+				for (int i = 0; i < marks.length; i++)
+				{
+					if (i > 0)
+					{
+						lineBuilder.append(",");
+					}
+					lineBuilder.append(marks[i]);
+				}
+				// final line for this student
+				String line = lineBuilder.toString();
+				writer.write(line);
+				writer.newLine();
+			}
+			writer.close();
 		}
 		catch (IOException e)
 		{
@@ -363,4 +407,28 @@ class Student
     {
         return averageMarks() >= 40;
     }
+	public int getId()
+	{
+		return id;
+	}
+	public String getName()
+	{
+		return name;
+	}
+	public int[] getMarks()
+	{
+		return marks;
+	}
+	public void setId(int id)
+	{
+		this.id = id;
+	}
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+	public void setMarks(int[] marks)
+	{
+		this.marks = marks;
+	}
 }
